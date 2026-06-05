@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edunexa Pro - Input Nilai</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/YSHKvYQ/Chat-GPT-Image-5-Jun-2026-22-30-27.png">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        :root { --primary: #4f46e5; --bg: #f1f5f9; --brand: #1e293b; --danger: #ef4444; }
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding: 20px; padding-bottom: 120px; }
+        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 16px; }
+        h3 { margin-top: 0; font-size: 14px; color: var(--brand); text-transform: uppercase; letter-spacing: 1px; }
+        
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        button { border: none; cursor: pointer; padding: 14px; border-radius: 12px; font-weight: 800; transition: 0.2s; }
+        
+        .btn-main { background: var(--primary); color: white; width: 100%; }
+        .btn-outline { background: #e2e8f0; color: var(--brand); width: 100%; margin-top: 10px; }
+        
+        .siswa-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+        .nilai-input { width: 80px; text-align: center; background: #eef2ff; border: 1px solid var(--primary); }
+        
+        .footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="setupArea" style="display:none;">
+    <div class="card">
+        <h3>Daftar Nama Siswa</h3>
+        <textarea id="rawSiswa" rows="10" placeholder="Salin daftar nama siswa di sini..."></textarea>
+        <button class="btn-main" onclick="simpanSiswa()">Simpan & Kembali</button>
+    </div>
+</div>
+
+<div id="mainArea">
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="https://i.ibb.co/YSHKvYQ/Chat-GPT-Image-5-Jun-2026-22-30-27.png" width="60" alt="Logo">
+        <h1 style="font-size: 20px; margin: 10px 0;">Edunexa Pro</h1>
+    </div>
+
+    <div class="card">
+        <h3>Pilih Kelas</h3>
+        <select id="mapel" onchange="resetForm()">
+            <optgroup label="Tingkat 1">
+                <option>Kelas 1</option><option>Kelas 1A</option><option>Kelas 1B</option><option>Kelas 1C</option><option>Kelas 1D</option>
+            </optgroup>
+            <optgroup label="Tingkat 2">
+                <option>Kelas 2</option><option>Kelas 2A</option><option>Kelas 2B</option><option>Kelas 2C</option><option>Kelas 2D</option>
+            </optgroup>
+            <optgroup label="Tingkat 3">
+                <option>Kelas 3</option><option>Kelas 3A</option><option>Kelas 3B</option><option>Kelas 3C</option><option>Kelas 3D</option>
+            </optgroup>
+            <optgroup label="Tingkat 4">
+                <option>Kelas 4</option><option>Kelas 4A</option><option>Kelas 4B</option><option>Kelas 4C</option><option>Kelas 4D</option>
+            </optgroup>
+            <optgroup label="Tingkat 5">
+                <option>Kelas 5</option><option>Kelas 5A</option><option>Kelas 5B</option><option>Kelas 5C</option><option>Kelas 5D</option>
+            </optgroup>
+            <optgroup label="Tingkat 6">
+                <option>Kelas 6</option><option>Kelas 6A</option><option>Kelas 6B</option><option>Kelas 6C</option><option>Kelas 6D</option>
+            </optgroup>
+        </select>
+        <input type="text" id="materi" placeholder="Nama Materi (Contoh: UH 1)" oninput="autoLoad()">
+        <button class="btn-outline" onclick="toggleSetup()">Ubah Daftar Siswa</button>
+    </div>
+
+    <div class="card" id="listSiswaContainer">
+        </div>
+
+    <div class="footer">
+        <button class="btn-outline" onclick="bagikanCSV()" style="flex:1">Ekspor CSV</button>
+        <button class="btn-main" onclick="simpanData()" style="flex:2">Simpan Nilai</button>
+    </div>
+</div>
+
+<script>
+    let db = JSON.parse(localStorage.getItem('edunexa_db_v9')) || {};
+    let siswa = JSON.parse(localStorage.getItem('edunexa_siswa_v9')) || [];
+
+    function renderSiswa() {
+        const container = document.getElementById('listSiswaContainer');
+        container.innerHTML = "<h3>Daftar Siswa</h3>";
+        siswa.forEach((nama, i) => {
+            container.innerHTML += `
+                <div class="siswa-row">
+                    <span>${i + 1}. ${nama}</span>
+                    <input type="number" class="nilai-input" id="nilai-${i}" placeholder="0">
+                </div>`;
+        });
+    }
+
+    function simpanSiswa() {
+        siswa = document.getElementById('rawSiswa').value.split('\n').map(s => s.trim()).filter(s => s);
+        localStorage.setItem('edunexa_siswa_v9', JSON.stringify(siswa));
+        toggleSetup(); renderSiswa();
+    }
+
+    function simpanData() {
+        const mapel = document.getElementById('mapel').value;
+        const materi = document.getElementById('materi').value.trim();
+        if(!materi) return alert("Masukkan nama materi!");
+        
+        if(!db[mapel]) db[mapel] = {};
+        db[mapel][materi] = siswa.map((_, i) => document.getElementById(`nilai-${i}`).value || "0");
+        localStorage.setItem('edunexa_db_v9', JSON.stringify(db));
+        alert("Data tersimpan!");
+    }
+
+    function autoLoad() {
+        const mapel = document.getElementById('mapel').value;
+        const materi = document.getElementById('materi').value;
+        if(db[mapel] && db[mapel][materi]) {
+            db[mapel][materi].forEach((val, i) => {
+                const el = document.getElementById(`nilai-${i}`);
+                if(el) el.value = val;
+            });
+        }
+    }
+
+    function resetForm() { document.querySelectorAll('.nilai-input').forEach(el => el.value = ""); document.getElementById('materi').value = ""; }
+    function toggleSetup() { document.getElementById('mainArea').style.display = document.getElementById('mainArea').style.display === 'none' ? 'block' : 'none'; document.getElementById('setupArea').style.display = document.getElementById('setupArea').style.display === 'none' ? 'block' : 'none'; }
+    
+    function bagikanCSV() {
+        const mapel = document.getElementById('mapel').value;
+        const materi = document.getElementById('materi').value || "Data";
+        let csv = "Nama;Nilai\n";
+        siswa.forEach((n, i) => csv += `${n};${document.getElementById('nilai-'+i).value || 0}\n`);
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${mapel}_${materi}.csv`; a.click();
+    }
+
+    renderSiswa();
+</script>
+</body>
+</html>
