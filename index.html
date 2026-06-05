@@ -3,141 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edunexa Pro - Input Nilai</title>
+    <title>Input Edunexa - Tomy Satria</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-title" content="Input Edunexa">
+    
     <link rel="apple-touch-icon" href="https://i.ibb.co/YSHKvYQ/Chat-GPT-Image-5-Jun-2026-22-30-27.png">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        :root { --primary: #4f46e5; --bg: #f1f5f9; --brand: #1e293b; --danger: #ef4444; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root { 
+            --primary: #4f46e5; 
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --brand: #1e293b; 
+            --danger: #ef4444; 
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradient); background-attachment: fixed; margin: 0; padding: 16px; padding-bottom: 110px; color: #334155; }
+        .header { text-align: center; padding: 20px 0 15px 0; }
+        .card { background: var(--card-bg); backdrop-filter: blur(16px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.8); margin-bottom: 20px; }
+        select, input, textarea { width: 100%; padding: 14px 16px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 14px; box-sizing: border-box; }
+        .siswa-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 8px; border-bottom: 1px solid rgba(203, 213, 225, 0.5); }
+        .nilai-input { width: 70px !important; text-align: center; font-weight: 800; color: var(--primary); height: 48px; border-radius: 12px; }
+        .footer { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); padding: 16px 20px 24px 20px; display: flex; gap: 12px; z-index: 100; }
+        button { border: none; font-weight: 800; cursor: pointer; padding: 16px; border-radius: 16px; }
+        .btn-main { background: var(--primary); color: white; flex: 2; }
+        .btn-side { background: #cbd5e1; color: var(--brand); flex: 1; }
         
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding: 20px; padding-bottom: 120px; }
-        .card { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 16px; }
-        h3 { margin-top: 0; font-size: 14px; color: var(--brand); text-transform: uppercase; letter-spacing: 1px; }
-        
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
-        button { border: none; cursor: pointer; padding: 14px; border-radius: 12px; font-weight: 800; transition: 0.2s; }
-        
-        .btn-main { background: var(--primary); color: white; width: 100%; }
-        .btn-outline { background: #e2e8f0; color: var(--brand); width: 100%; margin-top: 10px; }
-        
-        .siswa-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-        .nilai-input { width: 80px; text-align: center; background: #eef2ff; border: 1px solid var(--primary); }
-        
-        .footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; }
+        /* Gerbang Aktivasi */
+        #activationGate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .gate-card { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 350px; }
     </style>
 </head>
 <body>
 
-<div id="setupArea" style="display:none;">
-    <div class="card">
-        <h3>Daftar Nama Siswa</h3>
-        <textarea id="rawSiswa" rows="10" placeholder="Salin daftar nama siswa di sini..."></textarea>
-        <button class="btn-main" onclick="simpanSiswa()">Simpan & Kembali</button>
+<div id="activationGate">
+    <div class="gate-card">
+        <img src="https://i.ibb.co/YSHKvYQ/Chat-GPT-Image-5-Jun-2026-22-30-27.png" width="70" alt="Logo">
+        <h2>Aktivasi Edunexa</h2>
+        <div id="myDeviceId" style="font-weight:bold; margin:15px 0;">---</div>
+        <input type="text" id="activationCode" placeholder="Masukkan Kode Aktivasi">
+        <button class="btn-main" style="width:100%" onclick="checkActivation()">AKTIFKAN</button>
     </div>
 </div>
 
-<div id="mainArea">
-    <div style="text-align:center; margin-bottom:20px;">
-        <img src="https://i.ibb.co/YSHKvYQ/Chat-GPT-Image-5-Jun-2026-22-30-27.png" width="60" alt="Logo">
-        <h1 style="font-size: 20px; margin: 10px 0;">Edunexa Pro</h1>
-    </div>
-
+<div id="inputArea" style="display:none;">
+    <div class="header"><h1>INPUT NILAI EDUNEXA</h1></div>
     <div class="card">
-        <h3>Pilih Kelas</h3>
         <select id="mapel" onchange="resetForm()">
-            <optgroup label="Tingkat 1">
-                <option>Kelas 1</option><option>Kelas 1A</option><option>Kelas 1B</option><option>Kelas 1C</option><option>Kelas 1D</option>
-            </optgroup>
-            <optgroup label="Tingkat 2">
-                <option>Kelas 2</option><option>Kelas 2A</option><option>Kelas 2B</option><option>Kelas 2C</option><option>Kelas 2D</option>
-            </optgroup>
-            <optgroup label="Tingkat 3">
-                <option>Kelas 3</option><option>Kelas 3A</option><option>Kelas 3B</option><option>Kelas 3C</option><option>Kelas 3D</option>
-            </optgroup>
-            <optgroup label="Tingkat 4">
-                <option>Kelas 4</option><option>Kelas 4A</option><option>Kelas 4B</option><option>Kelas 4C</option><option>Kelas 4D</option>
-            </optgroup>
-            <optgroup label="Tingkat 5">
-                <option>Kelas 5</option><option>Kelas 5A</option><option>Kelas 5B</option><option>Kelas 5C</option><option>Kelas 5D</option>
-            </optgroup>
-            <optgroup label="Tingkat 6">
-                <option>Kelas 6</option><option>Kelas 6A</option><option>Kelas 6B</option><option>Kelas 6C</option><option>Kelas 6D</option>
-            </optgroup>
+            <optgroup label="Kelas 1"><option>Kelas 1</option><option>Kelas 1A</option><option>Kelas 1B</option><option>Kelas 1C</option><option>Kelas 1D</option></optgroup>
+            <optgroup label="Kelas 2"><option>Kelas 2</option><option>Kelas 2A</option><option>Kelas 2B</option><option>Kelas 2C</option><option>Kelas 2D</option></optgroup>
+            <optgroup label="Kelas 3"><option>Kelas 3</option><option>Kelas 3A</option><option>Kelas 3B</option><option>Kelas 3C</option><option>Kelas 3D</option></optgroup>
+            <optgroup label="Kelas 4"><option>Kelas 4</option><option>Kelas 4A</option><option>Kelas 4B</option><option>Kelas 4C</option><option>Kelas 4D</option></optgroup>
+            <optgroup label="Kelas 5"><option>Kelas 5</option><option>Kelas 5A</option><option>Kelas 5B</option><option>Kelas 5C</option><option>Kelas 5D</option></optgroup>
+            <optgroup label="Kelas 6"><option>Kelas 6</option><option>Kelas 6A</option><option>Kelas 6B</option><option>Kelas 6C</option><option>Kelas 6D</option></optgroup>
         </select>
-        <input type="text" id="materi" placeholder="Nama Materi (Contoh: UH 1)" oninput="autoLoad()">
-        <button class="btn-outline" onclick="toggleSetup()">Ubah Daftar Siswa</button>
+        <input type="text" id="materi" placeholder="Nama Materi..." oninput="autoLoad()">
     </div>
-
-    <div class="card" id="listSiswaContainer">
-        </div>
-
+    <div class="card" id="listSiswaContainer"></div>
     <div class="footer">
-        <button class="btn-outline" onclick="bagikanCSV()" style="flex:1">Ekspor CSV</button>
-        <button class="btn-main" onclick="simpanData()" style="flex:2">Simpan Nilai</button>
+        <button class="btn-side" onclick="simpanData()">SIMPAN</button>
+        <button class="btn-main" onclick="bagikanCSV()">EKSPOR CSV</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('edunexa_db_v9')) || {};
-    let siswa = JSON.parse(localStorage.getItem('edunexa_siswa_v9')) || [];
+    // --- LOGIKA AKTIVASI ---
+    const getDeviceId = () => {
+        let id = localStorage.getItem('edx_device_id') || 'DX-' + Math.floor(Math.random() * 900000 + 100000);
+        localStorage.setItem('edx_device_id', id);
+        return id;
+    };
+    function checkActivation() {
+        const input = document.getElementById('activationCode').value.trim();
+        if (input === "ACTIVATED") { localStorage.setItem('edx_activated', 'true'); location.reload(); }
+        else alert("Kode salah!");
+    }
+
+    // --- LOGIKA UTAMA ---
+    let dbNilai = JSON.parse(localStorage.getItem('db_edunexa_v9')) || {};
+    let daftarSiswa = JSON.parse(localStorage.getItem('db_siswa_v9')) || ["Siswa 1", "Siswa 2"];
+
+    window.onload = () => {
+        if (localStorage.getItem('edx_activated') === 'true') {
+            document.getElementById('activationGate').style.display = 'none';
+            document.getElementById('inputArea').style.display = 'block';
+            renderSiswa();
+        } else {
+            document.getElementById('myDeviceId').innerText = getDeviceId();
+        }
+    };
 
     function renderSiswa() {
         const container = document.getElementById('listSiswaContainer');
         container.innerHTML = "<h3>Daftar Siswa</h3>";
-        siswa.forEach((nama, i) => {
-            container.innerHTML += `
-                <div class="siswa-row">
-                    <span>${i + 1}. ${nama}</span>
-                    <input type="number" class="nilai-input" id="nilai-${i}" placeholder="0">
-                </div>`;
+        daftarSiswa.forEach((nama, i) => {
+            container.innerHTML += `<div class="siswa-row"><span class="nama-siswa">${i+1}. ${nama}</span><input type="number" class="nilai-input" id="n-${i}"></div>`;
         });
     }
 
-    function simpanSiswa() {
-        siswa = document.getElementById('rawSiswa').value.split('\n').map(s => s.trim()).filter(s => s);
-        localStorage.setItem('edunexa_siswa_v9', JSON.stringify(siswa));
-        toggleSetup(); renderSiswa();
-    }
-
     function simpanData() {
-        const mapel = document.getElementById('mapel').value;
-        const materi = document.getElementById('materi').value.trim();
-        if(!materi) return alert("Masukkan nama materi!");
-        
-        if(!db[mapel]) db[mapel] = {};
-        db[mapel][materi] = siswa.map((_, i) => document.getElementById(`nilai-${i}`).value || "0");
-        localStorage.setItem('edunexa_db_v9', JSON.stringify(db));
-        alert("Data tersimpan!");
+        const m = document.getElementById('mapel').value;
+        const mat = document.getElementById('materi').value;
+        if(!mat) return alert("Isi Materi!");
+        if(!dbNilai[m]) dbNilai[m] = {};
+        dbNilai[m][mat] = daftarSiswa.map((_, i) => document.getElementById(`n-${i}`).value);
+        localStorage.setItem('db_edunexa_v9', JSON.stringify(dbNilai));
+        alert("Tersimpan!");
     }
 
     function autoLoad() {
-        const mapel = document.getElementById('mapel').value;
-        const materi = document.getElementById('materi').value;
-        if(db[mapel] && db[mapel][materi]) {
-            db[mapel][materi].forEach((val, i) => {
-                const el = document.getElementById(`nilai-${i}`);
-                if(el) el.value = val;
-            });
+        const m = document.getElementById('mapel').value;
+        const mat = document.getElementById('materi').value;
+        if(dbNilai[m] && dbNilai[m][mat]) {
+            dbNilai[m][mat].forEach((v, i) => { const el = document.getElementById(`n-${i}`); if(el) el.value = v; });
         }
     }
 
     function resetForm() { document.querySelectorAll('.nilai-input').forEach(el => el.value = ""); document.getElementById('materi').value = ""; }
-    function toggleSetup() { document.getElementById('mainArea').style.display = document.getElementById('mainArea').style.display === 'none' ? 'block' : 'none'; document.getElementById('setupArea').style.display = document.getElementById('setupArea').style.display === 'none' ? 'block' : 'none'; }
     
     function bagikanCSV() {
-        const mapel = document.getElementById('mapel').value;
-        const materi = document.getElementById('materi').value || "Data";
+        const m = document.getElementById('mapel').value;
         let csv = "Nama;Nilai\n";
-        siswa.forEach((n, i) => csv += `${n};${document.getElementById('nilai-'+i).value || 0}\n`);
-        const blob = new Blob([csv], {type: 'text/csv'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${mapel}_${materi}.csv`; a.click();
+        daftarSiswa.forEach((n, i) => csv += `${n};${document.getElementById('n-'+i).value || 0}\n`);
+        const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv); a.download = m + ".csv"; a.click();
     }
-
-    renderSiswa();
 </script>
 </body>
 </html>
