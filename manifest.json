@@ -1,0 +1,22 @@
+{
+  "name": "Input Kelas - Edunexa Pro",
+  "short_name": "Edunexa Kelas",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e2e8f0",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "./EDUNEXA.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./EDUNEXA.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
